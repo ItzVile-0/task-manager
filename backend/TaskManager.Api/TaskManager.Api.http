@@ -1,6 +1,108 @@
-@TaskManager.Api_HostAddress = http://localhost:5065
+@api = http://localhost:5080
 
-GET {{TaskManager.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### Listar usuarios
+GET {{api}}/api/users
 
-###
+### Crear usuario
+POST {{api}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Pedro Martínez",
+  "email": "pedro.martinez@empresa.com"
+}
+
+### Correo repetido (409)
+POST {{api}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Otra Ana",
+  "email": "ana.gomez@empresa.com"
+}
+
+### Usuario sin nombre y correo invalido (400)
+POST {{api}}/api/users
+Content-Type: application/json
+
+{
+  "name": "",
+  "email": "esto-no-es-un-correo"
+}
+
+### Listar todas las tareas
+GET {{api}}/api/tasks
+
+### Tareas de un usuario filtradas por estado
+GET {{api}}/api/tasks?userId=1&status=Pending
+
+### Filtrar por prioridad (valor dentro del json)
+GET {{api}}/api/tasks?priority=High
+
+### Estado invalido en el filtro (400)
+GET {{api}}/api/tasks?status=Cerrada
+
+### Crear tarea con info adicional
+POST {{api}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Revisar licencias de Office",
+  "description": "Validar cuantas licencias quedan libres",
+  "userId": 3,
+  "additionalInfo": {
+    "priority": "Medium",
+    "estimatedEndDate": "2026-11-30",
+    "tags": ["licencias", "office"]
+  }
+}
+
+### Tarea sin titulo y sin usuario (400)
+POST {{api}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": "",
+  "userId": 0
+}
+
+### Tarea con usuario que no existe (422)
+POST {{api}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Tarea de prueba",
+  "userId": 999
+}
+
+### Pending -> Done no se permite (422)
+PUT {{api}}/api/tasks/4/status
+Content-Type: application/json
+
+{
+  "status": "Done"
+}
+
+### Pending -> InProgress
+PUT {{api}}/api/tasks/4/status
+Content-Type: application/json
+
+{
+  "status": "InProgress"
+}
+
+### InProgress -> Done
+PUT {{api}}/api/tasks/4/status
+Content-Type: application/json
+
+{
+  "status": "Done"
+}
+
+### Tarea que no existe (404)
+PUT {{api}}/api/tasks/999/status
+Content-Type: application/json
+
+{
+  "status": "InProgress"
+}
