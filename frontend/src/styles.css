@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+/* estilos globales, el tema de Material esta en material-theme.scss */
+
+.snack-error {
+  --mat-snack-bar-container-color: #b3261e;
+  --mat-snack-bar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+}

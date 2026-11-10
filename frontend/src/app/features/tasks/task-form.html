@@ -1,0 +1,59 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Nueva tarea</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field>
+        <mat-label>Título</mat-label>
+        <input matInput formControlName="title" maxlength="200" />
+        <mat-error>El título es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description" rows="3" maxlength="1000"></textarea>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Responsable</mat-label>
+        <mat-select formControlName="userId">
+          @for (user of users(); track user.id) {
+            <mat-option [value]="user.id">{{ user.name }}</mat-option>
+          } @empty {
+            <mat-option disabled>No hay usuarios, créalos en la pestaña Usuarios</mat-option>
+          }
+        </mat-select>
+        <mat-error>Debes asignar la tarea a un usuario</mat-error>
+      </mat-form-field>
+
+      <div class="row">
+        <mat-form-field>
+          <mat-label>Prioridad</mat-label>
+          <mat-select formControlName="priority">
+            <mat-option value="">Sin prioridad</mat-option>
+            @for (p of priorities; track p) {
+              <mat-option [value]="p">{{ priorityLabels[p] }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Fecha estimada</mat-label>
+          <input matInput type="date" formControlName="estimatedEndDate" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Etiquetas</mat-label>
+        <input matInput formControlName="tags" placeholder="infra, urgente" />
+        <mat-hint>Separadas por coma</mat-hint>
+      </mat-form-field>
+
+      <button mat-flat-button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando...' : 'Crear tarea' }}
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
